@@ -17,10 +17,12 @@ Vue.component('product', {
         <p v-else>Out of Stock</p>
         <p>Shipping: {{ shipping }}</p>
 
+        <h2>Details</h2>
         <ul>
           <li v-for="detail in details">{{ detail }}</li>
         </ul>
 
+        <h3>Colors: </h3>
         <div class="color-box" 
             v-for="(variant, index) in variants" 
             :key="variant.variantId" 
@@ -35,12 +37,9 @@ Vue.component('product', {
           :disabled="!inStock" 
           :class="{ disabledButton: !inStock }"
           >
-      Add to cart
+      Add to Cart
       </button>
 
-      <div class="cart">
-        <p>Cart({{ cart }})</p>
-      </div>
     </div>
   `,
   data() {
@@ -48,7 +47,7 @@ Vue.component('product', {
       product: 'Socks',
       brand: 'Vue Mastery',
       selectedVariant: 0,
-      details: ["80% cotton", "20% polyester", "Gender-neutral"],
+      details: ['80% cotton', '20% polyester', 'Gender-neutral'],
       variants: [
         {
           variantId: 2234,
@@ -62,13 +61,12 @@ Vue.component('product', {
           variantImage: './assets/vmSocks-blue.jpg',
           variantQuantity: 0
         }
-      ],
-      cart: 0
+      ]
     }
   },
   methods: {
     addToCart() {
-      this.cart += 1
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
     },
     updateProduct(index) {
       this.selectedVariant = index
@@ -98,6 +96,12 @@ Vue.component('product', {
 var app = new Vue({
   el: '#app',
   data: {
-    premium: true
+    premium: true,
+    cart: []
+  },
+  methods: {
+    updateCart(id) {
+      this.cart.push(id)
+    }
   }
 })

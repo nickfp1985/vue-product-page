@@ -7,6 +7,7 @@ Vue.component('product', {
   },
   template: `
     <div class="product">
+    
       <div class="product-image">
         <img :src="image" />
       </div>

@@ -18,7 +18,7 @@ body {
 
 img {
   border: 1px solid #d8d8d8;
-  width: 70%;
+  width: 50%;
   margin: 40px;
   box-shadow: 0px .5px 1px #d8d8d8;
 }
@@ -78,3 +78,12 @@ textarea {
   height: 60px;
 }
 
+.tab {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.activeTab {
+  color: #16C0B0;
+  text-decoration: underline;
+}

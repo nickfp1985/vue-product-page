@@ -13,17 +13,16 @@ Vue.component('product', {
       </div>
 
       <div class="product-info">
-        <h1>{{ title }}</h1>
+        <h1>{{ product }}</h1>
         <p v-if="inStock">In Stock</p>
         <p v-else>Out of Stock</p>
         <p>Shipping: {{ shipping }}</p>
 
         <h2>Details</h2>
         <ul>
-          <li v-for="detail in details">{{ detail }}</li>
+          <li v-for="(detail, index) in details" :key="index">{{ detail }}</li>
         </ul>
 
-        <h3>Colors: </h3>
         <div class="color-box" 
             v-for="(variant, index) in variants" 
             :key="variant.variantId" 
@@ -32,28 +31,16 @@ Vue.component('product', {
             >
         </div>
 
-        <button v-on:click="addToCart" 
+        <button @click="addToCart" 
           :disabled="!inStock" 
           :class="{ disabledButton: !inStock }"
           >
-          Add to Cart
+        Add to Cart
         </button>
 
       </div>
-        <h2>Reviews</h2>
-        <p v-if="!reviews.length">There are no reviews yet.</p>
-        <ul>
-          <li v-for="review in reviews">
-            <p>{{ review.name }}</p>
-            <p>{{ review.rating }}</p>
-            <p>{{ review.review }}</p>
-          </li>
-        </ul>
-      <div>
-      
-      </div>
 
-      <product-review @review-submitted></product-review>
+      <product-tabs :reviews="reviews"></product-tabs>
 
     </div>
   `,
@@ -116,8 +103,8 @@ Vue.component('product-review', {
   template: `
     <form class="review-form" @submit.prevent="onSubmit">
 
-      <p v-if"errors.length">
-        <b>Please, correct these error(s):</b>
+      <p class="error" v-if="errors.length">
+        <b>Please correct these error(s):</b>
         <ul>
           <li v-for="error in errors">{{ error }}</li>
         </ul>
@@ -142,6 +129,10 @@ Vue.component('product-review', {
           <option>2</option>
           <option>1</option>
         </select>
+      </p>
+
+      <p>
+        <input type="submit" value="Submit">
       </p>
     </form>
   `,
@@ -171,6 +162,46 @@ Vue.component('product-review', {
         if(!this.review) this.errors.push("Review required.")
         if(!this.rating) this.errors.push("Rating required.")
       }
+    }
+  }
+})
+
+Vue.component('product-tabs', {
+  props: {
+    reviews: {
+      type: Array,
+      required: true
+    }
+  },
+  template: `
+    <div>
+      <span class="tab"
+      :class="{ activeTab: selectedTab === tab }"
+          v-for="(tab, index) in tabs"
+          :key="index"
+          @click="selectedTab = tab">
+          {{ tab }}</span>
+
+      <div>
+        <h2>Reviews</h2>
+        <p v-if="!reviews.length">There are no reviews yet.</p>
+        <ul>
+          <li v-for="review in reviews">
+            <p>{{ review.name }}</p>
+            <p>{{ review.rating }}</p>
+            <p>{{ review.review }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <product-review @review-submitted></product-review>
+
+    </div>
+  `,
+  data() {
+    return {
+      tabs: ['Reviews', 'Make a Review'],
+      selectedTab: 'Reviews'
     }
   }
 })
